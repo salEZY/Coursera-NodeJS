@@ -1,3 +1,3 @@
-Repository created for completing and documenting Coursera Node Js specialization:
+Repository created for documenting and completing Coursera Node Js specialization:
 
 https://www.coursera.org/learn/server-side-nodejs
