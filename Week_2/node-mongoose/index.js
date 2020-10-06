@@ -6,27 +6,42 @@ const url = "mongodb://localhost:27017/confusion";
 const connect = mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
 });
 
 connect
   .then((db) => {
     console.log("Connected to MongoDB server!");
 
-    let newDish = Dishes({
+    Dishes.create({
       name: "Pizza",
       description: "Biggest EVIL",
-    });
-
-    newDish
-      .save()
+    })
       .then((dish) => {
         console.log(dish);
 
-        return Dishes.find({}).exec();
+        return Dishes.findByIdAndUpdate(
+          dish._id,
+          {
+            $set: { description: "BIGGEST EVUL EVAR" },
+          },
+          { new: true }
+        ).exec();
       })
-      .then((dishes) => {
-        console.log(dishes);
+      .then((dish) => {
+        console.log(dish);
 
+        dish.comments.push({
+          rating: 5,
+          comment: "Agreeed PIZZA IS THE WORST",
+          author: "CHIKA SALEZY",
+        });
+
+        return dish.save();
+      })
+      .then((dish) => {
+        console.log(dish);
         return Dishes.deleteMany({});
       })
       .then(() => {
