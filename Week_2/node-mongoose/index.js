@@ -2,12 +2,15 @@ const mongoose = require("mongoose");
 
 const Dishes = require("./models/dishes");
 
-const url = "mongodb://localhost:27017/conFusion";
-const connect = mongoose.connect(url);
+const url = "mongodb://localhost:27017/confusion";
+const connect = mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 connect
   .then((db) => {
-    console.log("Connected correctly to the server!");
+    console.log("Connected to MongoDB server!");
 
     let newDish = Dishes({
       name: "Pizza",
@@ -24,7 +27,7 @@ connect
       .then((dishes) => {
         console.log(dishes);
 
-        return Dishes.remove({});
+        return Dishes.deleteMany({});
       })
       .then(() => {
         return mongoose.connection.close();
