@@ -3,12 +3,28 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const mongoose = require("mongoose");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const dishRouter = require("./routes/dishRouter");
 const promoRouter = require("./routes/promoRouter");
 const leaderRouter = require("./routes/leaderRouter");
+const Dishes = require("./models/dishes");
+
+const url = "mongodb://localhost:27017/confusion";
+const connect = mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
+
+connect
+  .then((db) => {
+    console.log("Connect to MongoDB server!");
+  })
+  .catch((err) => console.log(err));
 
 var app = express();
 
