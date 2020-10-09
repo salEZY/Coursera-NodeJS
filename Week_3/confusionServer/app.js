@@ -47,7 +47,7 @@ const auth = (req, res, next) => {
     next(err);
   }
 
-  let auth = Buffer.from(authHeader.split(" ")[1], "base64")
+  let auth = new Buffer.from(authHeader.split(" ")[1], "base64")
     .toString()
     .split(":");
   console.log(auth.authorization);
