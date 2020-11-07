@@ -15,6 +15,7 @@ var usersRouter = require("./routes/users");
 const dishRouter = require("./routes/dishRouter");
 const promoRouter = require("./routes/promoRouter");
 const leaderRouter = require("./routes/leaderRouter");
+const uploadRouter = require("./routes/uploadRouter");
 
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
@@ -64,6 +65,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/dishes", dishRouter);
 app.use("/promotions", promoRouter);
 app.use("/leaders", leaderRouter);
+app.use("/imageUpload", uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
