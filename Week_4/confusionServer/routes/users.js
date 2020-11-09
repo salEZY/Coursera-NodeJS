@@ -4,29 +4,32 @@ const passport = require("passport");
 
 const Users = require("../../../Week_3/confusionServer/models/user");
 const authenticate = require("../authenticate");
+const cors = require("./cors");
 
 var router = express.Router();
 router.use(bodyParser.json());
 
 /* GET users listing. */
-router.get("/", authenticate.verifyUser, authenticate.verifyAdmin, function (
-  req,
-  res,
-  next
-) {
-  Users.find({})
-    .then(
-      (users) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(users);
-      },
-      (err) => next(err)
-    )
-    .catch((err) => next(err));
-});
+router.get(
+  "/",
+  cors.corsWithOptions,
+  authenticate.verifyUser,
+  authenticate.verifyAdmin,
+  function (req, res, next) {
+    Users.find({})
+      .then(
+        (users) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(users);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  }
+);
 
-router.post("/signup", (req, res, next) => {
+router.post("/signup", cors.corsWithOptions, (req, res, next) => {
   Users.register(
     new Users({ username: req.body.username }),
     req.body.password,
@@ -60,12 +63,17 @@ router.post("/signup", (req, res, next) => {
   );
 });
 
-router.post("/login", passport.authenticate("local"), (req, res, next) => {
-  let token = authenticate.getToken({ _id: req.user._id });
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.json({ success: true, token: token, status: "You are logged in!" });
-});
+router.post(
+  "/login",
+  cors.corsWithOptions,
+  passport.authenticate("local"),
+  (req, res, next) => {
+    let token = authenticate.getToken({ _id: req.user._id });
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    res.json({ success: true, token: token, status: "You are logged in!" });
+  }
+);
 
 router.get("/logout", (req, res, next) => {
   if (req.session) {
